@@ -76,7 +76,6 @@ function updateChain(updatedChain) {
 // App
 
 function showChains(chains, app) {
-    console.log('blah');
     chains.forEach(function(chain) {
         app.appendChild(makeChainSelector(chain, app));
     });
@@ -141,11 +140,9 @@ var app = document.getElementById("app");
 
 function run() {
 
-    console.log('blah');
     clearEl(app);
 
     var chains = getChains();
-    console.log('blah');
 
     if (chains.length) {
         showChains(chains, app);
