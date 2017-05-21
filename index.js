@@ -79,7 +79,6 @@ function showChains(chains, app) {
     chains.forEach(function(chain) {
         app.appendChild(makeChainSelector(chain, app));
     });
-    app.appendChild(makeChainEntry());
 }
 
 function hasAnyLogs(chain) {
@@ -146,9 +145,8 @@ function run() {
 
     if (chains.length) {
         showChains(chains, app);
-    } else {
-        showChainEntry(app);
     }
+    showChainEntry(app);
 }
 
 run();
