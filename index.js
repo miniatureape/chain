@@ -24,9 +24,9 @@ function makeChainSelector(chain, app) {
 }
 
 function makeChainEntry() {
-    var entry = document.createElement("div");
+    var entry = document.createElement("input");
+    entry.setAttribute('type', 'text');
     entry.addEventListener('keypress', handleEntry);
-    entry.innerHTML = "<div><input type='text'/></div>";
     return entry;
 }
 
@@ -47,9 +47,17 @@ function makeLogButton(chain, app, missedYesterday) {
 }
 
 function makeLink() {
-    x = document.createElement('div');
+    var x = document.createElement('div');
     x.className = "x";
     return x;
+}
+
+function makeCounter(currentLength, record) {
+    var counter = document.createElement('div');
+    counter.className = "counter";
+    counter.innerHTML = "current: " + currentLength + " / record: " + record;
+    return counter;
+
 }
 
 // Data Access
@@ -76,9 +84,11 @@ function updateChain(updatedChain) {
 // App
 
 function showChains(chains, app) {
+    var chainContainer = document.createElement("div");
     chains.forEach(function(chain) {
-        app.appendChild(makeChainSelector(chain, app));
+        chainContainer.appendChild(makeChainSelector(chain, app));
     });
+    app.appendChild(chainContainer);
 }
 
 function hasAnyLogs(chain) {
@@ -104,11 +114,22 @@ function showChain(chain, app) {
 
     var createdDay = chain.created_day;
     var lastEntered = chain.last_entered_day;
+    var chainLength = 0;
     while (createdDay <= lastEntered) {
         app.appendChild(makeLink());
+        chainLength++;
         createdDay++;
     }
+
+    if (chainLength > chain.record) {
+        chain.record = chainLength;
+        updateChain(chain);
+    }
+
+    app.appendChild(makeCounter(chainLength, chain.record));
+
 }
+
 
 function clearEl(el) {
     el.innerHTML = "";
@@ -130,7 +151,12 @@ function handleEntry(e) {
 
 function createChain(name) {
     var chains = getChains();
-    chains.push({"name": name, "last_entered_day": null, "created_day": dayOfYear() });
+    chains.push({
+        "name": name, 
+        "last_entered_day": null, 
+        "created_day": dayOfYear(),
+        "record" : 0
+    });
     setChains(chains);
     run();
 }
@@ -146,6 +172,7 @@ function run() {
     if (chains.length) {
         showChains(chains, app);
     }
+
     showChainEntry(app);
 }
 
